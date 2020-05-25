@@ -97,9 +97,8 @@ spec:
         }
         steps {
             container(name: 'kaniko', shell: '/busybox/sh') {
-                sh 'ls -la'
                 sh '''#!/busybox/sh
-                /kaniko/executor -f `pwd`/sample-app/Dockerfile.run -c `pwd` --cache=true --destination=$IMAGE_REGISTRY/sampleapp:$TAG
+                /kaniko/executor -f `pwd`/sample-app/Dockerfile -c `pwd` --cache=true --destination=$IMAGE_REGISTRY/sampleapp:$TAG
                 '''
             }
         }
