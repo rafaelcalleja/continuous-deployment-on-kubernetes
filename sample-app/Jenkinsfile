@@ -4,6 +4,7 @@ pipeline {
 
   environment {
     REGISTRY_TOKEN = credentials('jenkins-docker-hub-token-key-id')
+    REGISTRY_USER = credentials('jenkins-docker-hub-user-key-id')
     PROJECT = "REPLACE_WITH_YOUR_PROJECT_ID"
     APP_NAME = "gceme"
     FE_SVC_NAME = "${APP_NAME}-frontend"
@@ -73,7 +74,7 @@ spec:
       }
       steps {
         container('docker') {
-          sh 'docker login -u token -p ${REGISTRY_TOKEN}'
+          sh 'docker login -u ${REGISTRY_USER} -p ${REGISTRY_TOKEN}'
           sh 'docker build -t $IMAGE_REGISTRY/sampleapp:$TAG .'
           sh 'docker push $IMAGE_REGISTRY/sampleapp:$TAG'
         }
