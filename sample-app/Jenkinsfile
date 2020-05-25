@@ -76,6 +76,7 @@ spec:
       steps {
         container('docker') {
           sh 'docker login -u ${REGISTRY_USER} -p ${REGISTRY_TOKEN}'
+          sh 'cd sample-app'
           sh 'docker build -t $IMAGE_REGISTRY/sampleapp:$TAG .'
           sh 'docker push $IMAGE_REGISTRY/sampleapp:$TAG'
         }
