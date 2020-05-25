@@ -1,3 +1,5 @@
+def gitSHA
+
 pipeline {
 
   environment {
@@ -43,6 +45,14 @@ spec:
 }
   }
   stages {
+    stage('Checkout') {
+        steps {
+          checkout scm
+          script {
+            gitSHA = sh(returnStdout: true, script: 'git rev-parse --short HEAD')
+          }
+        }
+    }
     stage('Test') {
       steps {
         container('golang') {
@@ -56,9 +66,14 @@ spec:
       }
     }
     stage('Build and push image with Container Builder') {
+      environment {
+        TAG = "$gitSHA"
+      }
       steps {
-        container('gcloud') {
-          sh "PYTHONUNBUFFERED=1 gcloud builds submit -t ${IMAGE_TAG} ."
+        container('docker') {
+          sh 'docker login -u token -p ${REGISTRY_TOKEN}'
+          sh 'docker build -t $IMAGE_REGISTRY/sampleapp:$TAG .'
+          sh 'docker push $IMAGE_REGISTRY/sampleapp:$TAG'
         }
       }
     }
