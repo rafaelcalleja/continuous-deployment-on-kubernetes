@@ -48,10 +48,24 @@ spec:
     command:
     - cat
     tty: true
+  - name: kaniko
+    image: gcr.io/kaniko-project/executor:debug
+    imagePullPolicy: Always
+    command:
+    - /busybox/cat
+    tty: true
+    volumeMounts:
+    - name: jenkins-docker-cfg
+      mountPath: /kaniko/.docker
   volumes:
-  - name: dockersock
-    hostPath:
-      path: /var/run/docker.sock
+  - name: jenkins-docker-cfg
+    projected:
+      sources:
+      - secret:
+          name: registry-credentials
+          items:
+            - key: .dockerconfigjson
+              path: config.json
 """
 }
   }
@@ -75,6 +89,21 @@ spec:
           """
         }
       }
+    }
+    stage('Make Image') {
+        environment {
+            PATH        = "/busybox:$PATH"
+            REGISTRY    = 'index.docker.io' // Configure your own registry
+            REPOSITORY  = 'caladreas'
+            IMAGE       = 'cat'
+        }
+        steps {
+            container(name: 'kaniko', shell: '/busybox/sh') {
+                sh '''#!/busybox/sh
+                /kaniko/executor -f `pwd`/Dockerfile.run -c `pwd` --cache=true --destination=${REGISTRY}/${REPOSITORY}/${IMAGE}
+                '''
+            }
+        }
     }
     stage('Build and push image with Container Builder') {
       environment {
