@@ -3,6 +3,7 @@ def gitSHA
 pipeline {
 
   environment {
+    REGISTRY_TOKEN = credentials('jenkins-docker-hub-token-key-id')
     PROJECT = "REPLACE_WITH_YOUR_PROJECT_ID"
     APP_NAME = "gceme"
     FE_SVC_NAME = "${APP_NAME}-frontend"
