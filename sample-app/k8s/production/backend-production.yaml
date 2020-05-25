@@ -13,7 +13,7 @@
 # limitations under the License.
 
 kind: Deployment
-apiVersion: extensions/v1beta1
+apiVersion: apps/v1
 metadata:
   name: gceme-backend-production
 spec:
@@ -33,7 +33,7 @@ spec:
     spec:
       containers:
       - name: backend
-        image: gcr.io/cloud-solutions-images/gceme:1.0.0
+        image: rafaelcalleja/gceme:1.0.0
         resources:
           limits:
             memory: "500Mi"
