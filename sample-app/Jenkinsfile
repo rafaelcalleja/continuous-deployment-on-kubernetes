@@ -40,9 +40,6 @@ spec:
     - cat
     tty: true
     privileged: true
-    volumeMounts:
-    - name: dockersock
-      mountPath: /var/run/docker.sock
   - name: kubectl
     image: gcr.io/cloud-builders/kubectl
     command:
