@@ -93,6 +93,7 @@ spec:
             REGISTRY    = 'index.docker.io' // Configure your own registry
             REPOSITORY  = 'caladreas'
             IMAGE       = 'cat'
+            TAG = "$gitSHA"
         }
         steps {
             container(name: 'kaniko', shell: '/busybox/sh') {
